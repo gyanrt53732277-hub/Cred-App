@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 export default defineConfig({
   plugins: [react(), wasm()],
   // The Midnight onchain WASM runtime uses top-level await; target ESNext so
-  // esbuild does not down-level the injected wasm bootstrap.
+  // esbuild does not down-level the injected wasm bootstrap. 
   build: { target: "esnext" },
   resolve: {
     alias: {
