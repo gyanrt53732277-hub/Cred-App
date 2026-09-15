@@ -5,8 +5,7 @@
 // DApp Connector (CAIP-372) exposed by the wallet at `window.midnight`. Calling
 // `connect()` on the connector triggers the wallet's REAL authorization/approval
 // flow (a popup). We only ever set `connected = true` AFTER the wallet approves
-// the connection and reports a genuine wallet address + network.
-//
+// the connection and reports a genuine wallet address + network. 
 // There is intentionally NO simulated/mock wallet in this module. A mock
 // connector used by the automated tests lives ONLY inside the test environment
 // (see src/test/app.test.tsx) and is never used by the browser flow.
