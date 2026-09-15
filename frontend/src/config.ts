@@ -6,7 +6,7 @@ export const NETWORK_ID = "preprod" as const;
 
 /**
  * On-chain address of the deployed CrediFi contract on Midnight Preprod.
- * MANUAL ACTION REQUIRED: real value goes here after `npm run deploy` succeeds
+ * MANUAL ACTION REQUIRED: real value goes here after `npm run deploy` succeeds 
  * (requires a running proof server). This is NEVER fabricated.
  */
 export const CONTRACT_ADDRESS: string = "82f0731b0b4c5c81c44e0c14b21a2c1ee930a13109df422cf8b60bf954ee0c0b";
