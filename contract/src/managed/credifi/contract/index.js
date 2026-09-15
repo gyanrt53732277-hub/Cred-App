@@ -1,15 +1,9 @@
-import * as __compactRuntime from '@midnight-ntwrk/compact-runtime';
-__compactRuntime.checkRuntimeVersion('0.16.0');
-
-const _descriptor_0 = new __compactRuntime.CompactTypeUnsignedInteger(65535n, 2);
-
-const _descriptor_1 = __compactRuntime.CompactTypeJubjubPoint;
-
-const _descriptor_2 = new __compactRuntime.CompactTypeBytes(32);
-
-const _descriptor_3 = __compactRuntime.CompactTypeBoolean;
-
-const _descriptor_4 = __compactRuntime.CompactTypeOpaqueString;
+import * as __runtime from '@midnight-ntwrk/compact-runtime';
+__runtime.checkRuntimeVersion('0.16.0');
+const _descriptor_0 = new __runtime.CompactTypeUnsignedInteger(65535n, 2);
+const _descriptor_1 = __runtime.CompactTypeJubjubPoint;
+const _descriptor_2 = new __runtime.CompactTypeBytes(32);
+const _descriptor_3 = __runtime.CompactTypeBoolean; const _descriptor_4 = __runtime.CompactTypeOpaqueString;
 
 class _VerificationResult_0 {
   alignment() {
