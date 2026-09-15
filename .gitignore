@@ -1,0 +1,37 @@
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+logs/
+*.log
+midnight-level-db/
+coverage/
+**/reports/
+.npm.eslintcache
+.env
+.env.local
+.env.*.local
+.env.preprod
+contract/.env.preprod
+**/.DS_Store
+.vscode/
+.midnight-state.json
+*.key
+.pnp
+.pnp.js
+
+# --- Local developer/diagnostic artifacts (not part of the project) ----------
+# Temporary diagnostic/exploration scripts
+*_tmp_*
+# Local on-chain deployment evidence collected during diagnosis
+FULL_DEPLOY_EVIDENCE.txt
+# Wallet credential backups (secrets — never commit)
+.env.*.backup
+.env.*.bak
+contract/.env.preprod.backup
+contract/.env.preprod.bak
+# Config source backups
+*.backup.ts
+*.bak.ts
+# Local sync/run logs captured during diagnosis
+sync-log.txt

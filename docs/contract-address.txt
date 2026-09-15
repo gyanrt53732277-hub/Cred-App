@@ -1,0 +1,11 @@
+# CrediFi — Deployed Contract Address (Preprod)
+
+**Status: DEPLOYED**
+
+Real on-chain deployment on Midnight Preprod.
+
+`CONTRACT_ADDRESS` (now filled below) was written from a successful `deployContract()` result:
+
+```
+82f0731b0b4c5c81c44e0c14b21a2c1ee930a13109df422cf8b60bf954ee0c0b
+```

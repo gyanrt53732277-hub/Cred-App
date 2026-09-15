@@ -1,0 +1,125 @@
+pragma language_version >= 0.22 && <= 0.23;
+
+import CompactStandardLibrary;
+import "schnorr" prefix Schnorr_;
+
+export { Schnorr_SchnorrSignature };
+
+// ---------------------------------------------------------------------------
+// CrediFi - Privacy-Preserving Loan Eligibility & Risk Verification
+//
+// A user proves to a lender that their *verified* financial credential
+// satisfies a lending requirement -- income >= minimumIncome AND no previous
+// default -- WITHOUT revealing the exact income or the private financial
+// history. The eligibility evaluation runs entirely inside the ZK circuit.
+// Only the outcome (which requirements were satisfied and whether the user is
+// eligible) is written to the ledger. The exact income and the previous
+// default flag are witness-only and never cross the private/public boundary.
+// ---------------------------------------------------------------------------
+
+export struct VerificationResult {
+    minimumIncome: Uint<16>;
+    requireNoDefault: Boolean;
+    incomeSatisfied: Boolean;
+    defaultRequirementSatisfied: Boolean;
+    eligible: Boolean;
+    lenderRef: Opaque<"string">;
+}
+
+export new type HolderPublicKey = Bytes<32>;
+export new type AdminPublicKey = Bytes<32>;
+
+constructor() {
+    contractAdmin = disclose(deriveAdminPublicKey(getUserSecret()));
+}
+
+// Public ledger state. No sensitive financial attributes are stored here.
+export ledger contractAdmin: AdminPublicKey;
+export ledger issuers: Map<Uint<16>, JubjubPoint>;
+export ledger verificationResults: Map<Bytes<32>, Map<Uint<16>, VerificationResult>>;
+
+// Private witness inputs. These run on the user's machine, never on-chain.
+//      0: monthlyIncome (PRIVATE)
+//      1: previousDefaultFlag (PRIVATE) -- 0 (no default) or 1 (default)
+//      2: Schnorr signature from the trusted credential issuer (PRIVATE)
+//      3: issuerId (PRIVATE)
+witness getCredentialWitness(): [Uint<16>, Uint<16>, Schnorr_SchnorrSignature, Uint<16>];
+
+// The user's authoritative identity: a 32-byte secret held in private state.
+// All identity in this contract derives from it via domain-separated hashes.
+witness getUserSecret(): Bytes<32>;
+
+// Per-holder identity. Unlinkable without the secret.
+export pure circuit deriveHolderPublicKey(sk: Bytes<32>): HolderPublicKey {
+    return persistentHash<[Bytes<20>, Bytes<32>]>(["credifi:holder:pk:v1", sk]) as HolderPublicKey;
+}
+
+// Admin identity, used to guard issuer management and contract governance.
+export pure circuit deriveAdminPublicKey(sk: Bytes<32>): AdminPublicKey {
+    return persistentHash<[Bytes<19>, Bytes<32>]>(["credifi:admin:pk:v1", sk]) as AdminPublicKey;
+}
+
+// The exact hash the contract binds an attestation to. Exported so the mock
+// credential issuer signs the identical value off-chain.
+export pure circuit holderHash(pk: Bytes<32>): Field {
+    return transientHash<Bytes<32>>(pk);
+}
+
+// The core CrediFi flow: prove that the holder's attested credential satisfies
+// the lender's requirement without revealing the credential itself.
+//   minimumIncome   : lender-defined threshold (PUBLIC input)
+//   requireNoDefault: whether the lender requires no previous default (PUBLIC input)
+//   lenderRef       : lender reference label for the verification request (PUBLIC input)
+export circuit requestVerification(minimumIncome: Uint<16>, requireNoDefault: Boolean, lenderRef: Opaque<"string">): [] {
+    const holderPk = deriveHolderPublicKey(getUserSecret());
+    const disclosedHolderPk = disclose(holderPk);
+
+    const [monthlyIncome, previousDefaultFlag, signature, issuerId] = getCredentialWitness();
+
+    // The credential must be signed by a registered trusted issuer.
+    assert(issuers.member(disclose(issuerId)), "Credential issuer is not registered");
+    const issuerPk = issuers.lookup(disclose(issuerId));
+
+    // Bind the attestation to this specific holder so it cannot be replayed.
+    const userHash = transientHash<Bytes<32>>(disclosedHolderPk as Bytes<32>);
+    const msg: Vector<3, Field> = [
+        monthlyIncome as Field,
+        previousDefaultFlag as Field,
+        userHash,
+    ];
+    Schnorr_schnorrVerify<3>(msg, signature, issuerPk);
+
+    // Evaluate the requirement entirely inside the ZK circuit.
+    const incomeSatisfied = monthlyIncome >= minimumIncome;
+    const defaultRequirementSatisfied = previousDefaultFlag == 0;
+    const eligible = incomeSatisfied && (defaultRequirementSatisfied || !requireNoDefault);
+
+    // Only the *outcome* is disclosed and written to the ledger.
+    const disclosedResult = disclose(VerificationResult {
+        minimumIncome: minimumIncome,
+        requireNoDefault: requireNoDefault,
+        incomeSatisfied: incomeSatisfied,
+        defaultRequirementSatisfied: defaultRequirementSatisfied,
+        eligible: eligible,
+        lenderRef: lenderRef,
+    });
+
+    if (!verificationResults.member(disclosedHolderPk as Bytes<32>)) {
+        verificationResults.insert(disclosedHolderPk as Bytes<32>, default<Map<Uint<16>, VerificationResult>>);
+    }
+    const resultNumber = (verificationResults.lookup(disclosedHolderPk as Bytes<32>).size() + 1) as Uint<16>;
+    verificationResults.lookup(disclosedHolderPk as Bytes<32>).insert(resultNumber, disclosedResult);
+}
+
+// Register a trusted credential issuer (admin only, enforced in-circuit).
+export circuit registerIssuer(issuerId: Uint<16>, issuerPk: JubjubPoint): [] {
+    assert(contractAdmin == deriveAdminPublicKey(getUserSecret()), "Only the contract admin can manage issuers");
+    issuers.insert(disclose(issuerId), disclose(issuerPk));
+}
+
+// Remove a trusted credential issuer (admin only, enforced in-circuit).
+export circuit removeIssuer(issuerId: Uint<16>): [] {
+    assert(contractAdmin == deriveAdminPublicKey(getUserSecret()), "Only the contract admin can manage issuers");
+    assert(issuers.member(disclose(issuerId)), "Credential issuer not found");
+    issuers.remove(disclose(issuerId));
+}

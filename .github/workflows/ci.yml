@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      NODE_VERSION: "22"
+      # Compact devtools wrapper version and compiler version are pinned so CI
+      # always uses the same toolchain as local development.
+      COMPACT_COMPILER_VERSION: "0.31.1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install compact devtools and compiler
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf \
+            https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
+          echo "$HOME/.compact/bin" >> "$GITHUB_PATH"
+          compact update "$COMPACT_COMPILER_VERSION"
+          compact --version
+          compact compile --version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile Compact contract (generates managed bindings + zkir)
+        run: npm run contract:compile
+
+      - name: Typecheck contract
+        run: npm run typecheck --workspace contract
+
+      - name: Test contract (eligibility + privacy)
+        run: npm run contract:test
+
+      - name: Build contract
+        run: npm run contract:build
+
+      - name: Typecheck frontend
+        run: npx tsc --noEmit --project frontend/tsconfig.json
+
+      - name: Build frontend
+        run: npm run frontend:build
+
+      - name: Test frontend (engine + app smoke)
+        run: npm run frontend:test

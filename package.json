@@ -1,0 +1,26 @@
+{
+  "name": "credifi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CrediFi - Privacy-Preserving Loan Eligibility & Risk Verification on Midnight Network",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "workspaces": [
+    "contract",
+    "frontend"
+  ],
+  "scripts": {
+    "contract:compile": "npm run compact --workspace contract",
+    "contract:test": "npm run test --workspace contract",
+    "contract:build": "npm run build --workspace contract",
+    "frontend:test": "npm run test --workspace frontend",
+    "frontend:build": "npm run build --workspace frontend",
+    "frontend:dev": "npm run dev --workspace frontend",
+    "deploy": "npm run deploy --workspace contract",
+    "verify": "npm run verify --workspace contract",
+    "test": "npm run contract:test && npm run frontend:test",
+    "build": "npm run contract:build && npm run frontend:build"
+  }
+}
