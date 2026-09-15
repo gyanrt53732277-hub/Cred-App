@@ -1,11 +1,22 @@
-# CrediFi — Deployed Contract Address (Preprod)
+# CrediFi — Midnight Preprod Deployment
 
-**Status: DEPLOYED**
+## Deployment Record
 
-Real on-chain deployment on Midnight Preprod.
- 
-`CONTRACT_ADDRESS` (now filled below) was written from a successful `deployContract()` result:
+| Property | Details |
+|---|---|
+| Project | CrediFi |
+| Network | Midnight Preprod |
+| Deployment Type | On-chain |
+| Deployment Status | ✅ Successful |
+| Contract Address | `82f0731b0b4c5c81c44e0c14b21a2c1ee930a13109df422cf8b60bf954ee0c0b` |
 
-```
+### Contract Information
+
+The CrediFi smart contract has been successfully deployed to the
+**Midnight Preprod network**.
+
+The address below was captured from the completed `deployContract()`
+operation and represents the deployed contract instance:
+
+```text
 82f0731b0b4c5c81c44e0c14b21a2c1ee930a13109df422cf8b60bf954ee0c0b
-```
