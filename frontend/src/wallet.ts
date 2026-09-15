@@ -1,49 +1,191 @@
-// ---------------------------------------------------------------------------
-// Wallet connectivity (real Midnight browser wallet).
+
+// ============================================================================
+// CrediFi — Midnight Wallet Integration
+// ============================================================================
 //
-// CrediFi connects to a Midnight-compatible browser wallet through the official
-// DApp Connector (CAIP-372) exposed by the wallet at `window.midnight`. Calling
-// `connect()` on the connector triggers the wallet's REAL authorization/approval
-// flow (a popup). We only ever set `connected = true` AFTER the wallet approves
-// the connection and reports a genuine wallet address + network. 
-// There is intentionally NO simulated/mock wallet in this module. A mock
-// connector used by the automated tests lives ONLY inside the test environment
-// (see src/test/app.test.tsx) and is never used by the browser flow.
-// ---------------------------------------------------------------------------
-import type { InitialAPI, ConnectedAPI, ConnectionStatus } from "@midnight-ntwrk/dapp-connector-api";
+// Browser wallet integration is handled exclusively through the official
+// Midnight DApp Connector API.
+//
+// Expected browser interface:
+//     window.midnight
+//
+// Connection is considered successful only after the wallet has:
+//   1. Been detected by the application.
+//   2. Accepted the connection request.
+//   3. Returned a valid account address.
+//   4. Reported its active network.
+//
+// There is no fallback, fake account, or simulated browser wallet in the
+// production implementation. Test doubles are isolated inside the test suite.
+//
+// ============================================================================
+
+import type {
+  InitialAPI,
+  ConnectedAPI,
+  ConnectionStatus,
+} from "@midnight-ntwrk/dapp-connector-api";
+
 import { ErrorCodes } from "@midnight-ntwrk/dapp-connector-api";
+
 import { NETWORK_ID } from "./config";
 
+
+// ============================================================================
+// Provider definition
+// ============================================================================
+
+/**
+ * Wallet integration currently supported by CrediFi.
+ *
+ * The provider represents the Midnight browser DApp Connector rather than
+ * a locally generated or application-owned wallet.
+ */
 export type WalletProvider = "dapp-connector";
 
-export type WalletState = {
+
+// ============================================================================
+// Wallet state
+// ============================================================================
+
+/**
+ * Runtime representation of the connected wallet.
+ */
+export interface WalletState {
+  /**
+   * Indicates whether the connection has been fully authorized.
+   */
   connected: boolean;
-  /** The browser wallet connector used. */
+
+  /**
+   * Integration method used to communicate with the wallet.
+   */
   provider: WalletProvider;
-  /** The real wallet/account identifier returned by the connector. */
+
+  /**
+   * Account address returned by the connected wallet.
+   */
   address: string;
-  /** The network the wallet is actually connected to. */
+
+  /**
+   * Network currently reported by the wallet.
+   */
   networkId: string;
-  /** The reverse-DNS id of the wallet (e.g. a Lace connector). */
+
+  /**
+   * Reverse-DNS identifier supplied by the wallet connector.
+   *
+   * Example:
+   *     com.midnight.wallet
+   */
   rdns: string;
-};
+}
 
-// ---------------------------------------------------------------------------
-// Typed wallet errors so the UI can render the right message per case.
-// ---------------------------------------------------------------------------
-export type WalletErrorCode = "not-detected" | "rejected" | "wrong-network" | "connection-error" | "disconnected";
 
+// ============================================================================
+// Wallet error classification
+// ============================================================================
+
+/**
+ * Normalized error categories consumed by the application UI.
+ *
+ * Keeping connector-specific failures behind these categories allows the
+ * frontend to display meaningful messages without depending directly on
+ * low-level connector error details.
+ */
+export type WalletErrorCode =
+  | "not-detected"
+  | "rejected"
+  | "wrong-network"
+  | "connection-error"
+  | "disconnected";
+
+
+// ============================================================================
+// WalletError
+// ============================================================================
+
+/**
+ * Standardized wallet exception used throughout the CrediFi application.
+ */
 export class WalletError extends Error {
-  readonly code: WalletErrorCode;
+  /**
+   * Application-level classification of the wallet failure.
+   */
+  public readonly code: WalletErrorCode;
 
-  constructor(code: WalletErrorCode, message: string) {
+  constructor(
+    code: WalletErrorCode,
+    message: string,
+  ) {
     super(message);
+
     this.name = "WalletError";
     this.code = code;
+
+    // Required when targeting environments where subclassing Error can lose
+    // the prototype chain after transpilation.
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
+
+// ============================================================================
+// Connector type aliases
+// ============================================================================
+
 /**
+ * Initial connector interface exposed before authorization.
+ */
+export type MidnightInitialConnector = InitialAPI;
+
+/**
+ * Authorized connector interface returned after a successful connection.
+ */
+export type MidnightConnectedConnector = ConnectedAPI;
+
+/**
+ * Connector connection lifecycle state.
+ */
+export type MidnightConnectionStatus = ConnectionStatus;
+
+
+// ============================================================================
+// Network configuration
+// ============================================================================
+
+/**
+ * Expected Midnight network for the CrediFi application.
+ *
+ * The imported value is intentionally kept as the single source of truth.
+ */
+export const REQUIRED_NETWORK_ID = NETWORK_ID;
+
+
+// ============================================================================
+// Error code reference
+// ============================================================================
+//
+// ErrorCodes is imported from the official connector package so connector
+// failures can be mapped without hard-coding provider-specific numeric/string
+// values throughout the application.
+//
+// Example usage in the connection layer:
+//
+//     if (errorCode === ErrorCodes.USER_REJECTED) {
+//       throw new WalletError(
+//         "rejected",
+//         "The wallet connection request was rejected.",
+//       );
+//     }
+//
+// ============================================================================
+
+export { ErrorCodes };
+
+
+
+
  * Discovers an injected Midnight wallet connector on `window.midnight`.
  *
  * NOTE: The official Midnight docs strongly recommend discovering connectors by
