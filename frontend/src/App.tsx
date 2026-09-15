@@ -10,7 +10,7 @@ import { Features } from "./components/Features";
 import { PrivacySection } from "./components/PrivacySection";
 import { Footer } from "./components/Footer";
 import { ErrorCard } from "./components/ErrorCard";
-import { ProgressSteps, type StepKey } from "./components/ProgressSteps";
+import { ProgressSteps, type StepKey } from "./components/ProgressSteps"; 
 import { WalletStatus } from "./components/WalletStatus";
 import { CredentialCard } from "./components/CredentialCard";
 import { RequirementForm } from "./components/RequirementForm";
