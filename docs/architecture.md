@@ -1,5 +1,5 @@
 # CrediFi — Architecture
-
+ 
 An overview of how CrediFi keeps private financial data off-ledger while still
 proving eligibility to a lender.
 
