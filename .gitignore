@@ -1,37 +1,91 @@
+# ============================================================
+# Dependencies
+# ============================================================
+
 node_modules/
+.pnp
+.pnp.js
+
+
+# ============================================================
+# Build & Development Output
+# ============================================================
+
 dist/
 .vite/
-*.tsbuildinfo
-logs/
-*.log
-midnight-level-db/
 coverage/
-**/reports/
-.npm.eslintcache
+*.tsbuildinfo
+
+
+# ============================================================
+# Environment & Secrets
+# ============================================================
+
 .env
 .env.local
 .env.*.local
 .env.preprod
-contract/.env.preprod
-**/.DS_Store
-.vscode/
-.midnight-state.json
-*.key
-.pnp
-.pnp.js
 
-# --- Local developer/diagnostic artifacts (not part of the project) ----------
-# Temporary diagnostic/exploration scripts
-*_tmp_*
-# Local on-chain deployment evidence collected during diagnosis
-FULL_DEPLOY_EVIDENCE.txt
-# Wallet credential backups (secrets — never commit)
+contract/.env.preprod
+
+# Backup copies of environment files
 .env.*.backup
 .env.*.bak
 contract/.env.preprod.backup
 contract/.env.preprod.bak
-# Config source backups
+
+# Private keys / credentials
+*.key
+
+
+# ============================================================
+# Midnight / Blockchain Local State
+# ============================================================
+
+midnight-level-db/
+.midnight-state.json
+
+
+# ============================================================
+# Logs & Diagnostics
+# ============================================================
+
+logs/
+*.log
+sync-log.txt
+
+# Temporary diagnostic scripts
+*_tmp_*
+
+# Deployment evidence generated locally
+FULL_DEPLOY_EVIDENCE.txt
+
+
+# ============================================================
+# Reports & Generated Files
+# ============================================================
+
+**/reports/
+
+
+# ============================================================
+# Editor & Operating System Files
+# ============================================================
+
+.vscode/
+**/.DS_Store
+
+
+# ============================================================
+# Tool / Cache Files
+# ============================================================
+
+.npm.eslintcache
+
+
+# ============================================================
+# Configuration Backups
+# ============================================================
+
 *.backup.ts
 *.bak.ts
-# Local sync/run logs captured during diagnosis
-sync-log.txt
