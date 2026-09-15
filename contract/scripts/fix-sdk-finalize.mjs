@@ -4,7 +4,7 @@
 // `emit.end()` + `unsubscribe()`, which terminates the transaction-status event
 // stream before the `Finalized` stage can ever be observed. Because the wallet
 // facade waits for `'Finalized'` (`wallet-sdk-facade` calls
-// `submissionService.submitTransaction(tx,'Finalized')`), that premature end
+// `submissionService.submitTransaction(tx,'Finalized')`), that premature end 
 // surfaced as the onNone error:
 //
 //   TransactionProgressError { desiredStage: 'Finalized',
