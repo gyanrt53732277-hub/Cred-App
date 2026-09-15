@@ -3,7 +3,7 @@
 **Status: DEPLOYED**
 
 Real on-chain deployment on Midnight Preprod.
-
+ 
 `CONTRACT_ADDRESS` (now filled below) was written from a successful `deployContract()` result:
 
 ```
