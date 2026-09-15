@@ -1,51 +1,270 @@
-/* ===========================================================================
-   CrediFi design system — modern private fintech
-   Deep midnight + soft surfaces + blue/violet accent + accessible typography
-   =========================================================================== */
+```css
+/* ==========================================================================
+   CrediFi — Privacy Finance Design System
+   Midnight foundation · Emerald security accent · Glass surfaces
+   ========================================================================== */
 
 :root {
-  /* Surfaces — light-first, clean white/soft blue background */
-  --bg: #f4f6fb;
-  --bg-elevated: #ffffff;
-  --surface: #ffffff;
-  --surface-soft: #f8fafd;
-  --surface-muted: #eef1f7; 
+  /* ------------------------------------------------------------------------
+     Core backgrounds
+     ------------------------------------------------------------------------ */
 
-  /* Text */
-  --text: #101834;
-  --text-invert: #f0f4ff;
-  --muted: #5a6684;
-  --muted-strong: #3a4563;
+  --bg: #070a0f;
+  --bg-elevated: #0c1119;
+  --surface: #101722;
+  --surface-soft: #141c28;
+  --surface-muted: #1a2330;
 
-  /* Form inputs (light, high-contrast) */
-  --input-bg: #ffffff;
-  --input-bg-hover: #f6f8fc;
-  --input-text: #101834;
-  --input-placeholder: #8f9ab3;
+  /* ------------------------------------------------------------------------
+     Typography
+     ------------------------------------------------------------------------ */
 
-  /* Accents — professional blue → indigo/violet */
-  --accent: #5b7cfa;
-  --accent-strong: #4a68f5;
-  --violet: #8b7bff;
-  --accent-ink: #ffffff;
+  --text: #f5f7fa;
+  --text-invert: #07100c;
 
-  /* Status */
-  --good: #2fbf71;
-  --good-soft: rgba(47, 191, 113, 0.14);
-  --bad: #ef5b68;
-  --bad-soft: rgba(239, 91, 104, 0.12);
-  --warn: #e8a13d;
-  --warn-soft: rgba(232, 161, 61, 0.14);
+  --muted: #8995a7;
+  --muted-strong: #b7c1cf;
 
-  /* Borders / effects */
-  --line: rgba(15, 23, 60, 0.09);
-  --line-strong: rgba(15, 23, 60, 0.15);
-  --shadow-lg: 0 28px 70px -32px rgba(23, 37, 84, 0.35);
-  --shadow-md: 0 16px 42px -28px rgba(23, 37, 84, 0.28);
+  /* ------------------------------------------------------------------------
+     Form controls
+     ------------------------------------------------------------------------ */
 
+  --input-bg: #0c131d;
+  --input-bg-hover: #111b27;
+  --input-text: #f4f7fb;
+  --input-placeholder: #657286;
+
+  /* ------------------------------------------------------------------------
+     Primary brand palette
+     ------------------------------------------------------------------------ */
+
+  --accent: #5ee6a8;
+  --accent-strong: #35d58d;
+  --accent-soft: rgba(94, 230, 168, 0.12);
+  --accent-ink: #06130d;
+
+  /* Secondary highlight */
+  --cyan: #55d9e8;
+  --violet: #9b8cff;
+
+  /* ------------------------------------------------------------------------
+     Semantic states
+     ------------------------------------------------------------------------ */
+
+  --good: #4ade80;
+  --good-soft: rgba(74, 222, 128, 0.12);
+
+  --bad: #fb7185;
+  --bad-soft: rgba(251, 113, 133, 0.12);
+
+  --warn: #fbbf24;
+  --warn-soft: rgba(251, 191, 36, 0.12);
+
+  --info: #60a5fa;
+  --info-soft: rgba(96, 165, 250, 0.12);
+
+  /* ------------------------------------------------------------------------
+     Borders
+     ------------------------------------------------------------------------ */
+
+  --line: rgba(255, 255, 255, 0.07);
+  --line-soft: rgba(255, 255, 255, 0.045);
+  --line-strong: rgba(255, 255, 255, 0.13);
+
+  /* ------------------------------------------------------------------------
+     Shadows
+     ------------------------------------------------------------------------ */
+
+  --shadow-sm:
+    0 8px 24px rgba(0, 0, 0, 0.18);
+
+  --shadow-md:
+    0 18px 48px rgba(0, 0, 0, 0.28);
+
+  --shadow-lg:
+    0 32px 90px rgba(0, 0, 0, 0.42);
+
+  --shadow-accent:
+    0 12px 40px rgba(94, 230, 168, 0.16);
+
+  /* ------------------------------------------------------------------------
+     Glass effects
+     ------------------------------------------------------------------------ */
+
+  --glass-bg: rgba(16, 23, 34, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 18px;
+
+  /* ------------------------------------------------------------------------
+     Border radius
+     ------------------------------------------------------------------------ */
+
+  --radius-xl: 26px;
   --radius-lg: 20px;
   --radius-md: 14px;
-  --radius-sm: 10px;
+  --radius-sm: 9px;
+  --radius-pill: 999px;
+
+  /* ------------------------------------------------------------------------
+     Layout
+     ------------------------------------------------------------------------ */
+
+  --content-width: 1180px;
+  --section-gap: 96px;
+
+  /* ------------------------------------------------------------------------
+     Motion
+     ------------------------------------------------------------------------ */
+
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-fast: 160ms var(--ease-standard);
+  --transition-normal: 260ms var(--ease-standard);
+  --transition-slow: 420ms var(--ease-standard);
+}
+
+
+/* ==========================================================================
+   Light theme
+   ========================================================================== */
+
+[data-theme="light"] {
+  --bg: #f5f8f7;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f7faf9;
+  --surface-muted: #edf2ef;
+
+  --text: #0b1712;
+  --text-invert: #f5fff9;
+
+  --muted: #617067;
+  --muted-strong: #3f4d46;
+
+  --input-bg: #ffffff;
+  --input-bg-hover: #f3f7f5;
+  --input-text: #0b1712;
+  --input-placeholder: #89968f;
+
+  --line: rgba(10, 30, 20, 0.08);
+  --line-soft: rgba(10, 30, 20, 0.05);
+  --line-strong: rgba(10, 30, 20, 0.14);
+
+  --shadow-sm:
+    0 8px 24px rgba(20, 45, 35, 0.08);
+
+  --shadow-md:
+    0 18px 48px rgba(20, 45, 35, 0.11);
+
+  --shadow-lg:
+    0 32px 90px rgba(20, 45, 35, 0.15);
+
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(10, 30, 20, 0.08);
+}
+
+
+/* ==========================================================================
+   Global foundation
+   ========================================================================== */
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(94, 230, 168, 0.055),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(85, 217, 232, 0.045),
+      transparent 26%
+    ),
+    var(--bg);
+  color: var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+
+/* ==========================================================================
+   Selection
+   ========================================================================== */
+
+::selection {
+  background: rgba(94, 230, 168, 0.24);
+  color: var(--text);
+}
+
+
+/* ==========================================================================
+   Scrollbar
+   ========================================================================== */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-muted);
+  border: 2px solid var(--bg);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+
+/* ==========================================================================
+   Focus accessibility
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
 
   /* Elevation (for tooltips, popovers) */
   --surface-2: #ffffff;
