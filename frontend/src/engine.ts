@@ -6,7 +6,7 @@
 // decision is therefore computed by the real Midnight contract code, while the
 // user's exact income and default flag stay witness-only (never serialized).
 //
-// On-chain submission (real ZK proof + Preprod transaction) requires a running
+// On-chain submission (real ZK proof + Preprod transaction) requires a running 
 // proof server; that path is provided by the deploy CLI and is NOT fabricated
 // here. The result object below deliberately carries no income anywhere.
 // ---------------------------------------------------------------------------
